@@ -50,16 +50,51 @@
 
   <h2>Mes tâches</h2>
 
-  @if (tasks.length === 0) {
+  <div class="recherche">
+    <input
+      type="text"
+      placeholder="Rechercher par titre..."
+      [(ngModel)]="rechercheTitre"
+      name="rechercheTitre"
+    />
+  </div>
+
+  <div class="filtres">
+    <label for="filtreStatut">Statut :</label>
+    <select id="filtreStatut" [(ngModel)]="statutFiltre" name="statutFiltre">
+      <option value="TOUS">Toutes</option>
+      <option value="A_FAIRE">À faire</option>
+      <option value="EN_COURS">En cours</option>
+      <option value="TERMINE">Terminé</option>
+    </select>
+
+    <label for="filtrePriorite">Priorité :</label>
+    <select id="filtrePriorite" [(ngModel)]="prioriteFiltre" name="prioriteFiltre">
+      <option value="TOUTES">Toutes</option>
+      <option value="BASSE">Basse</option>
+      <option value="MOYENNE">Moyenne</option>
+      <option value="HAUTE">Haute</option>
+    </select>
+
+    <button type="button" (click)="toggleTri()">
+      Trier par date : {{ triCroissant ? 'plus proche d\'abord ↑' : 'plus lointaine d\'abord ↓' }}
+    </button>
+  </div>
+
+  @if (tasksFiltrees.length === 0) {
     <p>Aucune tâche pour le moment.</p>
   }
 
   <ul>
-    @for (task of tasks; track task.id) {
+    @for (task of tasksFiltrees; track task.id) {
       <li>
-        <strong>{{ task.titre }}</strong> — {{ task.statut }} ({{ task.priorite }})
+        <strong>{{ task.titre }}</strong>
+        <span class="badge" [class]="'badge-statut-' + task.statut">{{ task.statut }}</span>
+        <span class="badge" [class]="'badge-priorite-' + task.priorite">{{ task.priorite }}</span>
         <br>
         <small>{{ task.description }}</small>
+        <br>
+        <small>Échéance : {{ task.dateEcheance }}</small>
         <br>
         <button (click)="editTask(task)">Modifier</button>
         <button (click)="deleteTask(task.id)">Supprimer</button>

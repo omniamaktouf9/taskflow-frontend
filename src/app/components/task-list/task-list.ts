@@ -14,6 +14,10 @@ import { AuthService } from '../../services/auth';
 export class TaskList implements OnInit {
   tasks: Task[] = [];
   editingId: number | null = null;
+  statutFiltre: string = 'TOUS';
+  prioriteFiltre: string = 'TOUTES';
+  rechercheTitre: string = '';
+  triCroissant: boolean = true;
 
   newTask: Task = {
     titre: '',
@@ -115,5 +119,34 @@ export class TaskList implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleTri(): void {
+    this.triCroissant = !this.triCroissant;
+  }
+
+  get tasksFiltrees(): Task[] {
+    let resultat = this.tasks;
+
+    if (this.statutFiltre !== 'TOUS') {
+      resultat = resultat.filter(task => task.statut === this.statutFiltre);
+    }
+
+    if (this.prioriteFiltre !== 'TOUTES') {
+      resultat = resultat.filter(task => task.priorite === this.prioriteFiltre);
+    }
+
+    if (this.rechercheTitre.trim() !== '') {
+      const recherche = this.rechercheTitre.toLowerCase();
+      resultat = resultat.filter(task => task.titre.toLowerCase().includes(recherche));
+    }
+
+    resultat = [...resultat].sort((a, b) => {
+      const dateA = new Date(a.dateEcheance).getTime();
+      const dateB = new Date(b.dateEcheance).getTime();
+      return this.triCroissant ? dateA - dateB : dateB - dateA;
+    });
+
+    return resultat;
   }
 }
