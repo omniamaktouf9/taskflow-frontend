@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>TaskFlow</h1>
+      <p>Ma liste de tâches</p>
+    </div>
+    <button class="logout-btn" (click)="logout()">Déconnexion</button>
+  </div>
+
+  <h2>{{ editingId ? 'Modifier la tâche' : 'Ajouter une tâche' }}</h2>
+  <form (ngSubmit)="addTask()">
+    <input
+      type="text"
+      placeholder="Titre"
+      [(ngModel)]="newTask.titre"
+      name="titre"
+      required
+    />
+
+    <input
+      type="text"
+      placeholder="Description"
+      [(ngModel)]="newTask.description"
+      name="description"
+    />
+
+    <select [(ngModel)]="newTask.statut" name="statut">
+      <option value="A_FAIRE">À faire</option>
+      <option value="EN_COURS">En cours</option>
+      <option value="TERMINE">Terminé</option>
+    </select>
+
+    <select [(ngModel)]="newTask.priorite" name="priorite">
+      <option value="BASSE">Basse</option>
+      <option value="MOYENNE">Moyenne</option>
+      <option value="HAUTE">Haute</option>
+    </select>
+
+    <input
+      type="date"
+      [(ngModel)]="newTask.dateEcheance"
+      name="dateEcheance"
+    />
+
+    <button type="submit">{{ editingId ? 'Mettre à jour' : 'Ajouter' }}</button>
+    @if (editingId) {
+      <button type="button" (click)="cancelEdit()">Annuler</button>
+    }
+  </form>
+
+  <h2>Mes tâches</h2>
+
+  @if (tasks.length === 0) {
+    <p>Aucune tâche pour le moment.</p>
+  }
+
+  <ul>
+    @for (task of tasks; track task.id) {
+      <li>
+        <strong>{{ task.titre }}</strong> — {{ task.statut }} ({{ task.priorite }})
+        <br>
+        <small>{{ task.description }}</small>
+        <br>
+        <button (click)="editTask(task)">Modifier</button>
+        <button (click)="deleteTask(task.id)">Supprimer</button>
+      </li>
+    }
+  </ul>
+</div>

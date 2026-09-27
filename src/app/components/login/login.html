@@ -1,0 +1,48 @@
+<div class="auth-container">
+  <h1>TaskFlow</h1>
+  <h2>{{ isRegisterMode ? 'Créer un compte' : 'Se connecter' }}</h2>
+
+  @if (infoMessage) {
+    <p class="info">{{ infoMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
+  <form (ngSubmit)="onSubmit()">
+    @if (isRegisterMode) {
+      <input
+        type="text"
+        placeholder="Nom"
+        [(ngModel)]="nom"
+        name="nom"
+        required
+      />
+    }
+
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email"
+      name="email"
+      required
+    />
+
+    <input
+      type="password"
+      placeholder="Mot de passe"
+      [(ngModel)]="password"
+      name="password"
+      required
+    />
+
+    <button type="submit">
+      {{ isRegisterMode ? "S'inscrire" : "Se connecter" }}
+    </button>
+  </form>
+
+  <p class="toggle-link" (click)="toggleMode()">
+    {{ isRegisterMode ? 'Déjà un compte ? Se connecter' : 'Pas de compte ? S\'inscrire' }}
+  </p>
+</div>
