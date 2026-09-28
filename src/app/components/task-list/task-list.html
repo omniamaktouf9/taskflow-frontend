@@ -42,6 +42,13 @@
       name="dateEcheance"
     />
 
+    <input
+      type="text"
+      placeholder="Tags (séparés par des virgules)"
+      [(ngModel)]="tagsInput"
+      name="tagsInput"
+    />
+
     <button type="submit">{{ editingId ? 'Mettre à jour' : 'Ajouter' }}</button>
     @if (editingId) {
       <button type="button" (click)="cancelEdit()">Annuler</button>
@@ -95,6 +102,14 @@
         <small>{{ task.description }}</small>
         <br>
         <small>Échéance : {{ task.dateEcheance }}</small>
+        @if (task.tags && task.tags.length > 0) {
+          <br>
+          <span class="tags-container">
+            @for (tag of task.tags; track tag.id) {
+              <span class="tag-badge">#{{ tag.nom }}</span>
+            }
+          </span>
+        }
         <br>
         <button (click)="editTask(task)">Modifier</button>
         <button (click)="deleteTask(task.id)">Supprimer</button>

@@ -218,3 +218,18 @@ li button:last-of-type:hover {
 .badge-statut-TERMINE {
   background-color: #5cb85c;
 }
+
+.tags-container {
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.tag-badge {
+  display: inline-block;
+  background-color: #e0e0e0;
+  color: #555;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  margin-right: 5px;
+}

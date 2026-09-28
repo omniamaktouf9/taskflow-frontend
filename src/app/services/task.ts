@@ -3,6 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
 
+export interface Tag {
+  id?: number;
+  nom: string;
+}
+
 export interface Task {
   id?: number;
   titre: string;
@@ -10,6 +15,7 @@ export interface Task {
   statut: string;
   priorite: string;
   dateEcheance: string;
+  tags?: Tag[];
 }
 
 @Injectable({
@@ -17,6 +23,7 @@ export interface Task {
 })
 export class TaskService {
   private apiUrl = 'http://localhost:8080/api/tasks';
+  private tagsUrl = 'http://localhost:8080/api/tags';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -41,5 +48,9 @@ export class TaskService {
 
   deleteTask(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  getAllTags(): Observable<Tag[]> {
+    return this.http.get<Tag[]>(this.tagsUrl, { headers: this.getHeaders() });
   }
 }

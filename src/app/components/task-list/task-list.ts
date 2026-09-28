@@ -18,6 +18,7 @@ export class TaskList implements OnInit {
   prioriteFiltre: string = 'TOUTES';
   rechercheTitre: string = '';
   triCroissant: boolean = true;
+  tagsInput: string = '';
 
   newTask: Task = {
     titre: '',
@@ -50,10 +51,20 @@ export class TaskList implements OnInit {
     });
   }
 
+  private parseTagsInput(): { nom: string }[] {
+    return this.tagsInput
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0)
+      .map(nom => ({ nom }));
+  }
+
   addTask(): void {
     if (!this.newTask.titre.trim()) {
       return;
     }
+
+    this.newTask.tags = this.parseTagsInput();
 
     if (this.editingId !== null) {
       this.taskService.updateTask(this.editingId, this.newTask).subscribe({
@@ -87,6 +98,7 @@ export class TaskList implements OnInit {
       priorite: task.priorite,
       dateEcheance: task.dateEcheance
     };
+    this.tagsInput = task.tags ? task.tags.map(t => t.nom).join(', ') : '';
   }
 
   cancelEdit(): void {
@@ -95,6 +107,7 @@ export class TaskList implements OnInit {
 
   resetForm(): void {
     this.editingId = null;
+    this.tagsInput = '';
     this.newTask = {
       titre: '',
       description: '',
