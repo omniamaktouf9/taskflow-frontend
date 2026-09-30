@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TaskService, Task } from '../../services/task';
 import { AuthService } from '../../services/auth';
+import { TaskDetail } from '../task-detail/task-detail';
 
 @Component({
   selector: 'app-task-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TaskDetail],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css'
 })
@@ -19,6 +20,7 @@ export class TaskList implements OnInit {
   rechercheTitre: string = '';
   triCroissant: boolean = true;
   tagsInput: string = '';
+  tacheSelectionnee: Task | null = null;
 
   newTask: Task = {
     titre: '',
@@ -43,12 +45,23 @@ export class TaskList implements OnInit {
     this.taskService.getAllTasks().subscribe({
       next: (data) => {
         this.tasks = [...data];
+        if (this.tacheSelectionnee) {
+          this.tacheSelectionnee = this.tasks.find(t => t.id === this.tacheSelectionnee!.id) ?? null;
+        }
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erreur lors du chargement des tâches:', err);
       }
     });
+  }
+
+  ouvrirDetail(task: Task): void {
+    this.tacheSelectionnee = task;
+  }
+
+  fermerDetail(): void {
+    this.tacheSelectionnee = null;
   }
 
   private parseTagsInput(): { nom: string }[] {
@@ -99,6 +112,10 @@ export class TaskList implements OnInit {
       dateEcheance: task.dateEcheance
     };
     this.tagsInput = task.tags ? task.tags.map(t => t.nom).join(', ') : '';
+
+    setTimeout(() => {
+      document.getElementById('form-titre')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
   }
 
   cancelEdit(): void {

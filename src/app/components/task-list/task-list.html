@@ -7,7 +7,7 @@
     <button class="logout-btn" (click)="logout()">Déconnexion</button>
   </div>
 
-  <h2>{{ editingId ? 'Modifier la tâche' : 'Ajouter une tâche' }}</h2>
+  <h2 id="form-titre">{{ editingId ? 'Modifier la tâche' : 'Ajouter une tâche' }}</h2>
   <form (ngSubmit)="addTask()">
     <input
       type="text"
@@ -94,7 +94,7 @@
 
   <ul>
     @for (task of tasksFiltrees; track task.id) {
-      <li>
+      <li (click)="ouvrirDetail(task)">
         <strong>{{ task.titre }}</strong>
         <span class="badge" [class]="'badge-statut-' + task.statut">{{ task.statut }}</span>
         <span class="badge" [class]="'badge-priorite-' + task.priorite">{{ task.priorite }}</span>
@@ -111,9 +111,17 @@
           </span>
         }
         <br>
-        <button (click)="editTask(task)">Modifier</button>
-        <button (click)="deleteTask(task.id)">Supprimer</button>
+        <button (click)="editTask(task); $event.stopPropagation()">Modifier</button>
+        <button (click)="deleteTask(task.id); $event.stopPropagation()">Supprimer</button>
       </li>
     }
   </ul>
+
+  @if (tacheSelectionnee) {
+    <app-task-detail
+      [task]="tacheSelectionnee"
+      (close)="fermerDetail()"
+      (refresh)="loadTasks()"
+    ></app-task-detail>
+  }
 </div>

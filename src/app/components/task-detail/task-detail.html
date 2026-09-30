@@ -1,0 +1,61 @@
+<div class="overlay" (click)="fermer()">
+  <div class="detail-panel" (click)="$event.stopPropagation()">
+    <div class="detail-header">
+      <h2>{{ task.titre }}</h2>
+      <button class="btn-fermer" (click)="fermer()">✕</button>
+    </div>
+
+    <p class="detail-description">{{ task.description }}</p>
+
+    <div class="section">
+      <h3>Sous-tâches ({{ nombreCompletees }}/{{ task.subTasks?.length || 0 }} — {{ progression }}%)</h3>
+
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progression"></div>
+      </div>
+
+      <ul class="subtask-list">
+        @for (subTask of task.subTasks; track subTask.id) {
+          <li [class.done]="subTask.complete">
+            <label>
+              <input
+                type="checkbox"
+                [checked]="subTask.complete"
+                (change)="toggleSousTache(subTask.id)"
+              />
+              <span>{{ subTask.titre }}</span>
+            </label>
+            <button class="btn-supprimer-sub" (click)="supprimerSousTache(subTask.id)">✕</button>
+          </li>
+        }
+      </ul>
+
+      <form class="add-subtask-form" (ngSubmit)="ajouterSousTache()">
+        <input
+          type="text"
+          placeholder="Nouvelle sous-tâche..."
+          [(ngModel)]="nouvelleSousTache"
+          name="nouvelleSousTache"
+        />
+        <button type="submit">Ajouter</button>
+      </form>
+    </div>
+
+    <div class="section">
+      <h3>Historique</h3>
+      <ul class="activity-list">
+        @for (activity of task.activities; track activity.id) {
+          <li>
+            <span class="activity-date">{{ activity.dateCreation | slice:0:16 }}</span>
+            <span class="activity-text">
+              {{ activity.action }}
+              @if (activity.ancienneValeur) {
+                : <strong>{{ activity.ancienneValeur }}</strong> → <strong>{{ activity.nouvelleValeur }}</strong>
+              }
+            </span>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
