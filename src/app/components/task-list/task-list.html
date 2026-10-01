@@ -49,6 +49,31 @@
       name="tagsInput"
     />
 
+    <div class="dependances-selection">
+      <button type="button" class="dependances-toggle" (click)="toggleDependancesOuvertes()">
+        Dépend de : {{ dependencyIds.length > 0 ? dependencyIds.length + ' tâche(s) sélectionnée(s)' : 'Aucune' }}
+        <span>{{ dependancesOuvertes ? '▲' : '▼' }}</span>
+      </button>
+
+      @if (dependancesOuvertes) {
+        <div class="dependances-liste">
+          @if (autresTaches.length === 0) {
+            <p class="aucune-dependance">Aucune autre tâche disponible</p>
+          }
+          @for (t of autresTaches; track t.id) {
+            <label class="dependance-item">
+              <input
+                type="checkbox"
+                [checked]="isDependencySelected(t.id)"
+                (change)="toggleDependency(t.id, $event)"
+              />
+              {{ t.titre }}
+            </label>
+          }
+        </div>
+      }
+    </div>
+
     <button type="submit">{{ editingId ? 'Mettre à jour' : 'Ajouter' }}</button>
     @if (editingId) {
       <button type="button" (click)="cancelEdit()">Annuler</button>
@@ -98,6 +123,9 @@
         <strong>{{ task.titre }}</strong>
         <span class="badge" [class]="'badge-statut-' + task.statut">{{ task.statut }}</span>
         <span class="badge" [class]="'badge-priorite-' + task.priorite">{{ task.priorite }}</span>
+        @if (task.bloquee) {
+          <span class="badge-bloquee">🔒 Bloquée par : {{ getTitresDependancesNonTerminees(task) }}</span>
+        }
         <br>
         <small>{{ task.description }}</small>
         <br>

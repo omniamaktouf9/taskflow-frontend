@@ -20,6 +20,8 @@ export class TaskList implements OnInit {
   rechercheTitre: string = '';
   triCroissant: boolean = true;
   tagsInput: string = '';
+  dependencyIds: number[] = [];
+  dependancesOuvertes: boolean = false;
   tacheSelectionnee: Task | null = null;
 
   newTask: Task = {
@@ -72,12 +74,31 @@ export class TaskList implements OnInit {
       .map(nom => ({ nom }));
   }
 
+  toggleDependency(taskId: number | undefined, event: Event): void {
+    if (!taskId) return;
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.dependencyIds.push(taskId);
+    } else {
+      this.dependencyIds = this.dependencyIds.filter(id => id !== taskId);
+    }
+  }
+
+  isDependencySelected(taskId: number | undefined): boolean {
+    return taskId !== undefined && this.dependencyIds.includes(taskId);
+  }
+
+  toggleDependancesOuvertes(): void {
+    this.dependancesOuvertes = !this.dependancesOuvertes;
+  }
+
   addTask(): void {
     if (!this.newTask.titre.trim()) {
       return;
     }
 
     this.newTask.tags = this.parseTagsInput();
+    this.newTask.dependencies = this.dependencyIds.map(id => ({ id } as Task));
 
     if (this.editingId !== null) {
       this.taskService.updateTask(this.editingId, this.newTask).subscribe({
@@ -112,6 +133,7 @@ export class TaskList implements OnInit {
       dateEcheance: task.dateEcheance
     };
     this.tagsInput = task.tags ? task.tags.map(t => t.nom).join(', ') : '';
+    this.dependencyIds = task.dependencies ? task.dependencies.map(d => d.id!).filter(id => id !== undefined) : [];
 
     setTimeout(() => {
       document.getElementById('form-titre')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -125,6 +147,8 @@ export class TaskList implements OnInit {
   resetForm(): void {
     this.editingId = null;
     this.tagsInput = '';
+    this.dependencyIds = [];
+    this.dependancesOuvertes = false;
     this.newTask = {
       titre: '',
       description: '',
@@ -153,6 +177,18 @@ export class TaskList implements OnInit {
 
   toggleTri(): void {
     this.triCroissant = !this.triCroissant;
+  }
+
+  get autresTaches(): Task[] {
+    return this.tasks.filter(t => t.id !== this.editingId);
+  }
+
+  getTitresDependancesNonTerminees(task: Task): string {
+    if (!task.dependencies) return '';
+    return task.dependencies
+      .filter(d => d.statut !== 'TERMINE')
+      .map(d => d.titre)
+      .join(', ');
   }
 
   get tasksFiltrees(): Task[] {

@@ -233,3 +233,96 @@ li button:last-of-type:hover {
   font-size: 11px;
   margin-right: 5px;
 }
+.badge-bloquee {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  background-color: #6c757d;
+  margin-left: 8px;
+}
+.dependances-selection {
+  width: 100%;
+  background-color: #f9f9f9;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 4px;
+}
+
+.dependances-titre {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 6px 0;
+}
+
+.aucune-dependance {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.dependance-item {
+  display: block;
+  font-size: 13px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.dependance-item input {
+  margin-right: 6px;
+}
+.dependances-selection {
+  width: 100%;
+  margin-top: 4px;
+  position: relative;
+}
+
+.dependances-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dependances-toggle:hover {
+  border-color: var(--color-primary, #2e75b6);
+}
+
+.dependances-liste {
+  margin-top: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.aucune-dependance {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.dependance-item {
+  display: block;
+  font-size: 13px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.dependance-item input {
+  margin-right: 6px;
+}

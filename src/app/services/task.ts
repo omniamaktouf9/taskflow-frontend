@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { AuthService } from './auth';
 
 export interface Tag {
@@ -32,6 +32,13 @@ export interface Task {
   tags?: Tag[];
   subTasks?: SubTask[];
   activities?: TaskActivity[];
+  dependencies?: Task[];
+  bloquee?: boolean;
+}
+
+interface TaskResponse {
+  task: Task;
+  bloquee: boolean;
 }
 
 @Injectable({
@@ -52,7 +59,9 @@ export class TaskService {
   }
 
   getAllTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl, { headers: this.getHeaders() });
+    return this.http.get<TaskResponse[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+      map(responses => responses.map(r => ({ ...r.task, bloquee: r.bloquee })))
+    );
   }
 
   createTask(task: Task): Observable<Task> {
