@@ -326,3 +326,18 @@ li button:last-of-type:hover {
 .dependance-item input {
   margin-right: 6px;
 }
+.retour-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary, #2e75b6);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.retour-btn:hover {
+  text-decoration: underline;
+}

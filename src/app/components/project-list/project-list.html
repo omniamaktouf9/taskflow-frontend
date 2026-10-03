@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>TaskFlow</h1>
+      <p>Mes projets</p>
+    </div>
+    <button class="logout-btn" (click)="logout()">Déconnexion</button>
+  </div>
+
+  <h2>{{ editingId ? 'Modifier le projet' : 'Nouveau projet' }}</h2>
+  <form (ngSubmit)="addProject()">
+        <input
+      type="text"
+      placeholder="Nom du projet"
+      [(ngModel)]="newProject.nom"
+      name="nom"
+      required
+      (keydown.enter)="$event.preventDefault()"
+    />
+    <input
+      type="text"
+      placeholder="Description"
+      [(ngModel)]="newProject.description"
+      name="description"
+    />
+    <button type="submit">{{ editingId ? 'Mettre à jour' : 'Créer' }}</button>
+    @if (editingId) {
+      <button type="button" (click)="cancelEdit()">Annuler</button>
+    }
+  </form>
+
+  <h2>Mes projets</h2>
+
+  @if (projects.length === 0) {
+    <p>Aucun projet pour le moment. Créez-en un pour commencer !</p>
+  }
+
+  <ul class="project-grid">
+    @for (project of projects; track project.id) {
+      <li class="project-card" (click)="ouvrirProjet(project.id)">
+        <strong>{{ project.nom }}</strong>
+        <p>{{ project.description }}</p>
+        <div class="project-actions">
+          <button (click)="editProject(project); $event.stopPropagation()">Modifier</button>
+          <button (click)="deleteProject(project.id); $event.stopPropagation()">Supprimer</button>
+        </div>
+      </li>
+    }
+  </ul>
+</div>

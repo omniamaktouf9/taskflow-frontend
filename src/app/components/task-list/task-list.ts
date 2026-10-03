@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TaskService, Task } from '../../services/task';
 import { AuthService } from '../../services/auth';
 import { TaskDetail } from '../task-detail/task-detail';
@@ -23,6 +23,7 @@ export class TaskList implements OnInit {
   dependencyIds: number[] = [];
   dependancesOuvertes: boolean = false;
   tacheSelectionnee: Task | null = null;
+  projectId: number | null = null;
 
   newTask: Task = {
     titre: '',
@@ -36,15 +37,19 @@ export class TaskList implements OnInit {
     private taskService: TaskService,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.route.queryParams.subscribe(params => {
+      this.projectId = params['projectId'] ? Number(params['projectId']) : null;
+      this.loadTasks();
+    });
   }
 
   loadTasks(): void {
-    this.taskService.getAllTasks().subscribe({
+    this.taskService.getAllTasks(this.projectId ?? undefined).subscribe({
       next: (data) => {
         this.tasks = [...data];
         if (this.tacheSelectionnee) {
@@ -56,6 +61,10 @@ export class TaskList implements OnInit {
         console.error('Erreur lors du chargement des tâches:', err);
       }
     });
+  }
+
+  retourProjets(): void {
+    this.router.navigate(['/projects']);
   }
 
   ouvrirDetail(task: Task): void {
@@ -99,6 +108,10 @@ export class TaskList implements OnInit {
 
     this.newTask.tags = this.parseTagsInput();
     this.newTask.dependencies = this.dependencyIds.map(id => ({ id } as Task));
+
+    if (this.projectId) {
+      this.newTask.project = { id: this.projectId } as any;
+    }
 
     if (this.editingId !== null) {
       this.taskService.updateTask(this.editingId, this.newTask).subscribe({

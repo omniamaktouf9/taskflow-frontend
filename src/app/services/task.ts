@@ -22,6 +22,12 @@ export interface TaskActivity {
   dateCreation: string;
 }
 
+export interface Project {
+  id?: number;
+  nom: string;
+  description: string;
+}
+
 export interface Task {
   id?: number;
   titre: string;
@@ -33,6 +39,7 @@ export interface Task {
   subTasks?: SubTask[];
   activities?: TaskActivity[];
   dependencies?: Task[];
+  project?: Project | null;
   bloquee?: boolean;
 }
 
@@ -58,8 +65,9 @@ export class TaskService {
     });
   }
 
-  getAllTasks(): Observable<Task[]> {
-    return this.http.get<TaskResponse[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+  getAllTasks(projectId?: number): Observable<Task[]> {
+    const url = projectId ? `${this.apiUrl}?projectId=${projectId}` : this.apiUrl;
+    return this.http.get<TaskResponse[]>(url, { headers: this.getHeaders() }).pipe(
       map(responses => responses.map(r => ({ ...r.task, bloquee: r.bloquee })))
     );
   }
