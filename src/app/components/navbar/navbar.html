@@ -1,0 +1,21 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="logo">🗂</span>
+    <span class="brand-name">TaskFlow</span>
+  </div>
+
+    <div class="navbar-links">
+    <a routerLink="/projects" routerLinkActive="active">Projets</a>
+  </div>
+
+  <div class="navbar-user">
+    <button class="user-btn" (click)="toggleMenu()">
+      👤 Mon compte {{ menuOuvert ? '▲' : '▼' }}
+    </button>
+    @if (menuOuvert) {
+      <div class="user-menu">
+        <button (click)="logout()">Déconnexion</button>
+      </div>
+    }
+  </div>
+</nav>
