@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { AuthService } from './auth';
+import { API_URL } from '../config';
 
 export interface Tag {
   id?: number;
@@ -52,9 +53,9 @@ interface TaskResponse {
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:8080/api/tasks';
-  private tagsUrl = 'http://localhost:8080/api/tags';
-  private subtasksUrl = 'http://localhost:8080/api/subtasks';
+  private apiUrl = `${API_URL}/api/tasks`;
+  private tagsUrl = `${API_URL}/api/tags`;
+  private subtasksUrl = `${API_URL}/api/subtasks`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

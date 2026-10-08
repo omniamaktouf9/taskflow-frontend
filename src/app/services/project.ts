@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
+import { API_URL } from '../config';
 
 export interface Project {
   id?: number;
@@ -13,7 +14,7 @@ export interface Project {
   providedIn: 'root'
 })
 export class ProjectService {
-  private apiUrl = 'http://localhost:8080/api/projects';
+  private apiUrl = `${API_URL}/api/projects`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
